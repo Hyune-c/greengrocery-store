@@ -10,8 +10,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,10 +40,17 @@ public class GetVegetableService {
             .retrieve()
             .bodyToMono(GetVegetableExternalDto.class)
             .doOnError(throwable -> {
-                log.error("### external api call error. message={}. cause={}", throwable.getMessage(), throwable.getCause());
+                if (throwable instanceof WebClientResponseException) {
+                    WebClientResponseException webClientResponseException = (WebClientResponseException) throwable;
 
-                if (throwable.getMessage().contains("Not Found")) {
-                    throw new BusinessException(ErrorCode.VEGETABLE_NOT_FOUND);
+                    if (webClientResponseException.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                        throw new BusinessException(ErrorCode.VEGETABLE_NOT_FOUND);
+                    }
+
+                    if (webClientResponseException.getResponseBodyAsString().contains("Access token required")) {
+                        vegetableAccessKey.refreshVegetableAccessKey();
+                        throw new BusinessException(ErrorCode.REFRESH_ACCESS_TOKEN);
+                    }
                 }
             })
             .map(GetVegetableDto::new);
@@ -51,7 +60,7 @@ public class GetVegetableService {
         return Flux.fromIterable(names)
             .flatMap(this::get)
             .doOnError(throwable -> {
-                log.error("### external api call error. message={}. cause={}", throwable.getMessage(), throwable.getCause());
+                
 
                 if (throwable.getMessage().contains("Not Found")) {
                     throw new BusinessException(ErrorCode.VEGETABLE_NOT_FOUND);
