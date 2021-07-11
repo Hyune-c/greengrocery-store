@@ -2,7 +2,7 @@ package com.example.greengrocerystore.external.service;
 
 import com.example.greengrocerystore.common.exception.ErrorCode;
 import com.example.greengrocerystore.common.exception.custom.BusinessException;
-import com.example.greengrocerystore.external.common.accesskey.FruitAccessKey;
+import com.example.greengrocerystore.external.common.accesskey.FruitAccessToken;
 import com.example.greengrocerystore.external.dto.GetFruitDto;
 import com.example.greengrocerystore.external.dto.GetFruitExternalDto;
 import java.net.URI;
@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class GetFruitService {
 
-    private final FruitAccessKey fruitAccessKey;
+    private final FruitAccessToken fruitAccessToken;
     private final String fruitBaseUrl;
 
     private final WebClient webClient;
@@ -36,7 +36,7 @@ public class GetFruitService {
 
         return webClient.get()
             .uri(uri)
-            .header(HttpHeaders.AUTHORIZATION, fruitAccessKey.getAccessKey())
+            .header(HttpHeaders.AUTHORIZATION, fruitAccessToken.getAccessToken())
             .retrieve()
             .bodyToMono(GetFruitExternalDto.class)
             .doOnError(throwable -> {
@@ -48,7 +48,7 @@ public class GetFruitService {
                     }
 
                     if (webClientResponseException.getResponseBodyAsString().contains("Access token required")) {
-                        fruitAccessKey.refreshFruitAccessKey();
+                        fruitAccessToken.refresh();
                         throw new BusinessException(ErrorCode.REFRESH_ACCESS_TOKEN);
                     }
                 }

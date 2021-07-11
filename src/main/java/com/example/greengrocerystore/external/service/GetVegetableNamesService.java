@@ -2,7 +2,7 @@ package com.example.greengrocerystore.external.service;
 
 import com.example.greengrocerystore.common.exception.ErrorCode;
 import com.example.greengrocerystore.common.exception.custom.BusinessException;
-import com.example.greengrocerystore.external.common.accesskey.VegetableAccessKey;
+import com.example.greengrocerystore.external.common.accesskey.VegetableAccessToken;
 import com.google.gson.Gson;
 import java.net.URI;
 import java.util.List;
@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class GetVegetableNamesService {
 
-    private final VegetableAccessKey vegetableAccessKey;
+    private final VegetableAccessToken vegetableAccessToken;
     private final String vegetableBaseUrl;
 
     private final WebClient webClient;
@@ -32,7 +32,7 @@ public class GetVegetableNamesService {
 
         return webClient.get()
             .uri(uri)
-            .header(HttpHeaders.AUTHORIZATION, vegetableAccessKey.getAccessKey())
+            .header(HttpHeaders.AUTHORIZATION, vegetableAccessToken.getAccessToken())
             .retrieve()
             .bodyToMono(String.class)
             .doOnError(throwable -> {
@@ -40,7 +40,7 @@ public class GetVegetableNamesService {
                     WebClientResponseException webClientResponseException = (WebClientResponseException) throwable;
 
                     if (webClientResponseException.getResponseBodyAsString().contains("Access token required")) {
-                        vegetableAccessKey.refreshVegetableAccessKey();
+                        vegetableAccessToken.refresh();
                         throw new BusinessException(ErrorCode.REFRESH_ACCESS_TOKEN);
                     }
                 }

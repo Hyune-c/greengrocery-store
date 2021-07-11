@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
-public class GetFruitAccessKeyService {
+public class GetFruitAccessTokenService {
 
     private final String fruitBaseUrl;
 

@@ -1,6 +1,6 @@
 package com.example.greengrocerystore.external.common.accesskey;
 
-import com.example.greengrocerystore.external.common.accesskey.service.GetVegetableAccessKeyService;
+import com.example.greengrocerystore.external.common.accesskey.service.GetVegetableAccessTokenService;
 import java.net.HttpCookie;
 import java.util.List;
 import java.util.Objects;
@@ -14,23 +14,22 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @RequiredArgsConstructor
 @Configuration
-public class VegetableAccessKey {
+public class VegetableAccessToken {
 
-    private String accessKey;
+    private String accessToken;
 
-    private final GetVegetableAccessKeyService getVegetableAccessKeyService;
+    private final GetVegetableAccessTokenService getVegetableAccessTokenService;
 
     @PostConstruct
     private void postConstruct() {
-        refreshVegetableAccessKey();
-        log.info("### vegetableAccessKey={}", accessKey);
+        refresh();
     }
 
-    public void refreshVegetableAccessKey() {
-        getVegetableAccessKeyService.get()
+    public void refresh() {
+        getVegetableAccessTokenService.get()
             .subscribe(cookieString -> {
                 List<HttpCookie> cookies = HttpCookie.parse(Objects.requireNonNull(cookieString));
-                accessKey = cookies.get(0).getValue();
+                accessToken = cookies.get(0).getValue();
             });
     }
 }

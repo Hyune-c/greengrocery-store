@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
-public class GetVegetableAccessKeyService {
+public class GetVegetableAccessTokenService {
 
     private final String vegetableBaseUrl;
 
