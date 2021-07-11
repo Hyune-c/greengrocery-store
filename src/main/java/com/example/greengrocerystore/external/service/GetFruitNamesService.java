@@ -2,12 +2,14 @@ package com.example.greengrocerystore.external.service;
 
 import com.example.greengrocerystore.external.common.accesskey.FruitAccessKey;
 import com.google.gson.Gson;
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -16,11 +18,14 @@ import reactor.core.publisher.Mono;
 public class GetFruitNamesService {
 
     private final FruitAccessKey fruitAccessKey;
+    private final String fruitBaseUrl;
 
     private final WebClient webClient;
 
     public Mono<List<String>> get() {
-        String uri = "http://fruit.api.postype.net/product";
+        URI uri = new DefaultUriBuilderFactory()
+            .uriString(fruitBaseUrl + "/product")
+            .build();
 
         return webClient.get()
             .uri(uri)
