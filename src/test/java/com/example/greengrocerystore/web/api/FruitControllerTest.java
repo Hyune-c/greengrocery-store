@@ -18,7 +18,60 @@ class FruitControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @DisplayName("[성공] 과일 목록 조회")
+    @DisplayName("[성공] v1 과일 조회")
+    @Test
+    public void getFruitV1() {
+        // given
+
+        // when
+        List<FruitResponse> responses = webTestClient
+            .get().uri(uriBuilder -> uriBuilder.path("/api/v1/fruits")
+                .queryParam("name", "배")
+                .build())
+            .exchange()
+            .expectStatus().isOk()
+            .expectBodyList(FruitResponse.class)
+            .returnResult()
+            .getResponseBody();
+
+        // then
+        assertThat(responses).isNotNull();
+        assertThat(responses.size()).isGreaterThanOrEqualTo(1);
+    }
+
+    @DisplayName("[실패] v1 과일 조회 - queryParam 누락")
+    @Test
+    public void getFruitV1_withoutQueryParam() {
+        // given
+
+        // when
+        webTestClient
+            .get().uri("/api/v1/fruits")
+            .exchange()
+            .expectStatus().isBadRequest();
+
+        // then
+
+    }
+
+    @DisplayName("[실패] v1 과일 조회 - 존재하지 않는 과일 이름")
+    @Test
+    public void getFruitV1_notExistsFruit() {
+        // given
+
+        // when
+        webTestClient
+            .get().uri(uriBuilder -> uriBuilder.path("/api/v1/fruits")
+            .queryParam("name", "외국채소")
+            .build())
+            .exchange()
+            .expectStatus().isNotFound();
+
+        // then
+
+    }
+
+    @DisplayName("[성공] v2 과일 목록 조회")
     @Test
     public void getFruitV2() {
         // given
@@ -37,7 +90,7 @@ class FruitControllerTest {
         assertThat(responses.size()).isGreaterThanOrEqualTo(0);
     }
 
-    @DisplayName("[실패] 과일 목록 조회 - 존재하지 않는 과일 이름")
+    @DisplayName("[실패] v2 과일 목록 조회 - 존재하지 않는 과일 이름")
     @Test
     public void getFruitV2_notExistsFruit() {
         // given

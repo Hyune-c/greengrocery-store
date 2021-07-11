@@ -27,7 +27,7 @@ public class VegetableController {
 
     @GetMapping("/api/v1/vegetables")
     public Mono<VegetableResponse> getVegetable(
-        @RequestParam(required = false) String name) {
+        @RequestParam String name) {
         return getVegetableService.get(name)
             .map(VegetableResponse::new);
     }

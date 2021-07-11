@@ -4,11 +4,13 @@ import com.example.greengrocerystore.external.common.accesskey.VegetableAccessKe
 import com.google.gson.Gson;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class GetVegetableNamesService {
@@ -25,6 +27,8 @@ public class GetVegetableNamesService {
             .header(HttpHeaders.AUTHORIZATION, vegetableAccessKey.getAccessKey())
             .retrieve()
             .bodyToMono(String.class)
+            .doOnError(throwable ->
+                log.error("### external api call error. message={}. cause={}", throwable.getMessage(), throwable.getCause()))
             .map(names -> new Gson().fromJson(names, List.class));
     }
 }

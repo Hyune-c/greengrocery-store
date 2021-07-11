@@ -31,6 +31,13 @@ public class GetVegetableService {
             .header(HttpHeaders.AUTHORIZATION, vegetableAccessKey.getAccessKey())
             .retrieve()
             .bodyToMono(GetVegetableExternalDto.class)
+            .doOnError(throwable -> {
+                log.error("### external api call error. message={}. cause={}", throwable.getMessage(), throwable.getCause());
+
+                if (throwable.getMessage().contains("Not Found")) {
+                    throw new BusinessException(ErrorCode.VEGETABLE_NOT_FOUND);
+                }
+            })
             .map(GetVegetableDto::new);
     }
 

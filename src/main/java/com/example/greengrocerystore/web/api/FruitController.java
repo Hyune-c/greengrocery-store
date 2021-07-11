@@ -27,7 +27,7 @@ public class FruitController {
 
     @GetMapping("/api/v1/fruits")
     public Mono<FruitResponse> getFruit(
-        @RequestParam(required = false) String name) {
+        @RequestParam String name) {
         return getFruitService.get(name)
             .map(FruitResponse::new);
     }

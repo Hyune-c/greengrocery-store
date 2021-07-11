@@ -31,6 +31,13 @@ public class GetFruitService {
             .header(HttpHeaders.AUTHORIZATION, fruitAccessKey.getAccessKey())
             .retrieve()
             .bodyToMono(GetFruitExternalDto.class)
+            .doOnError(throwable -> {
+                log.error("### external api call error. message={}. cause={}", throwable.getMessage(), throwable.getCause());
+
+                if (throwable.getMessage().contains("Not Found")) {
+                    throw new BusinessException(ErrorCode.FRUIT_NOT_FOUND);
+                }
+            })
             .map(GetFruitDto::new);
     }
 
