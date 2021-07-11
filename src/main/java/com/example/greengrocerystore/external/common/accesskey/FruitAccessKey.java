@@ -1,7 +1,6 @@
 package com.example.greengrocerystore.external.common.accesskey;
 
 import com.example.greengrocerystore.external.common.accesskey.service.GetFruitAccessKeyService;
-import java.util.Objects;
 import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,7 @@ public class FruitAccessKey {
     }
 
     public void refreshFruitAccessKey() {
-        accessKey = Objects.requireNonNull(getFruitAccessKeyService.get().block()).getAccessToken();
+        getFruitAccessKeyService.get()
+            .subscribe(externalDto -> accessKey = externalDto.getAccessToken());
     }
 }

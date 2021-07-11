@@ -27,9 +27,10 @@ public class VegetableAccessKey {
     }
 
     public void refreshVegetableAccessKey() {
-        String cookieString = getVegetableAccessKeyService.get().block();
-        List<HttpCookie> cookies = HttpCookie.parse(Objects.requireNonNull(cookieString));
-
-        accessKey = cookies.get(0).getValue();
+        getVegetableAccessKeyService.get()
+            .subscribe(cookieString -> {
+                List<HttpCookie> cookies = HttpCookie.parse(Objects.requireNonNull(cookieString));
+                accessKey = cookies.get(0).getValue();
+            });
     }
 }
