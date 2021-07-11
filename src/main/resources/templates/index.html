@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Contetnt-Type" content="text/html" ; charset="UTF-8"/>
+  <title>청과물 가게</title>
+
+  <script>
+    function doGreenGroceryType() {
+      var greenGroceryType = document.getElementById("greenGroceryTypes").value;
+      document.getElementById("greenGroceryType").value = greenGroceryType;
+
+      if (greenGroceryType === "FRUIT") {
+        document.getElementById("fruitNamesSelect").disabled = false;
+        document.getElementById("vegetableNamesSelect").disabled = true;
+      } else if (greenGroceryType === "VEGETABLE") {
+        document.getElementById("fruitNamesSelect").disabled = true;
+        document.getElementById("vegetableNamesSelect").disabled = false;
+      } else {
+        document.getElementById("fruitNamesSelect").disabled = true;
+        document.getElementById("vegetableNamesSelect").disabled = true;
+      }
+    }
+
+    function doQueryByFruit() {
+      document.getElementById("greenGroceryName").value = document.getElementById(
+          "fruitNamesSelect").value;
+    }
+
+    function doQueryByVegetable() {
+      document.getElementById("greenGroceryName").value = document.getElementById(
+          "vegetableNamesSelect").value;
+    }
+  </script>
+</head>
+<body>
+<h1>청과물 가게에 오신 것을 환영합니다.</h1>
+
+<div class="form-group blu-margin">
+  <select class="form-control" th:field="${types}" id="greenGroceryTypes"
+          onChange="doGreenGroceryType();">
+    <option value="0">청과물 종류</option>
+    <option th:each="type : ${types}"
+            th:value="${type}"
+            th:text="${type}"></option>
+  </select>
+</div>
+
+</br>
+
+<div class="form-group blu-margin">
+  <select class="form-control" th:field="${fruitNames}" id="fruitNamesSelect"
+          onChange="doQueryByFruit();" disabled>
+    <option value="0">과일 이름</option>
+    <option th:each="fruitName : ${fruitNames}"
+            th:value="${fruitName}"
+            th:text="${fruitName}"></option>
+  </select>
+  <select class="form-control" th:field="${vegetableNames}" id="vegetableNamesSelect"
+          onChange="doQueryByVegetable();" disabled>
+    <option value="0">채소 이름</option>
+    <option th:each="vegetableName : ${vegetableNames}"
+            th:value="${vegetableName}"
+            th:text="${vegetableName}"></option>
+  </select>
+
+  <form method="get" action="/greenGrocery">
+    <input id="greenGroceryType" type="text" name="type" width="400" th:value="${value}" readonly/>
+    <input id="greenGroceryName" type="text" name="name" width="400" th:value="${value}"/>
+    <input type="submit" value="가격 조회"/>
+  </form>
+</div>
+
+<span th:text="${name}"></span> <span th:text="${price}"></span>
+
+</body>
+</html>
