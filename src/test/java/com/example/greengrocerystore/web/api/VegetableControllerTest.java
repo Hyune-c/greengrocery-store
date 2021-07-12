@@ -11,17 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@DisplayName("[web] 과일")
+@DisplayName("[web] 채소")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class FruitControllerTest {
+class VegetableControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
-    private final String v1BaseUrl = "/api/v1/fruits";
-    private final String v2BaseUrl = "/api/v2/fruits";
+    private final String v1BaseUrl = "/api/v1/vegetables";
+    private final String v2BaseUrl = "/api/v2/vegetables";
 
-    @DisplayName("[성공] v1 과일 조회")
+    @DisplayName("[성공] v1 채소 조회")
     @Test
     public void getFruitV1() {
         // given
@@ -29,7 +29,7 @@ class FruitControllerTest {
         // when
         List<FruitResponse> responses = webTestClient
             .get().uri(uriBuilder -> uriBuilder.path(v1BaseUrl)
-                .queryParam("name", "배")
+                .queryParam("name", "치커리")
                 .build())
             .exchange()
             .expectStatus().isOk()
@@ -42,7 +42,7 @@ class FruitControllerTest {
         assertThat(responses.size()).isGreaterThanOrEqualTo(1);
     }
 
-    @DisplayName("[실패] v1 과일 조회 - queryParam 누락")
+    @DisplayName("[실패] v1 채소 조회 - queryParam 누락")
     @Test
     public void getFruitV1_withoutQueryParam() {
         // given
@@ -57,7 +57,7 @@ class FruitControllerTest {
 
     }
 
-    @DisplayName("[실패] v1 과일 조회 - 존재하지 않는 과일 이름")
+    @DisplayName("[실패] v1 채소 조회 - 존재하지 않는 과일 이름")
     @Test
     public void getFruitV1_notExistsFruit() {
         // given
@@ -65,7 +65,7 @@ class FruitControllerTest {
         // when
         webTestClient
             .get().uri(uriBuilder -> uriBuilder.path(v1BaseUrl)
-            .queryParam("name", "외국채소")
+            .queryParam("name", "외국과일")
             .build())
             .exchange()
             .expectStatus().isNotFound();
@@ -74,7 +74,7 @@ class FruitControllerTest {
 
     }
 
-    @DisplayName("[성공] v2 과일 목록 조회")
+    @DisplayName("[성공] v2 채소 목록 조회")
     @Test
     public void getFruitV2() {
         // given
@@ -93,7 +93,7 @@ class FruitControllerTest {
         assertThat(responses.size()).isGreaterThanOrEqualTo(0);
     }
 
-    @DisplayName("[실패] v2 과일 목록 조회 - 존재하지 않는 과일 이름")
+    @DisplayName("[실패] v2 채소 목록 조회 - 존재하지 않는 채소 이름")
     @Test
     public void getFruitV2_notExistsFruit() {
         // given
@@ -101,7 +101,7 @@ class FruitControllerTest {
         // when
         webTestClient
             .get().uri(uriBuilder -> uriBuilder.path(v2BaseUrl)
-            .queryParam("names", "외국채소")
+            .queryParam("names", "외국과일")
             .build())
             .exchange()
             .expectStatus().isNotFound();
