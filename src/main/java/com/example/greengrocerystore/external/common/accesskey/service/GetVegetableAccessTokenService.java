@@ -1,19 +1,25 @@
 package com.example.greengrocerystore.external.common.accesskey.service;
 
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
-public class GetVegetableAccessKeyService {
+public class GetVegetableAccessTokenService {
+
+    private final String vegetableBaseUrl;
 
     private final WebClient webClient;
 
     public Mono<String> get() {
-        String uri = "http://vegetable.api.postype.net/token";
+        URI uri = new DefaultUriBuilderFactory()
+            .uriString(vegetableBaseUrl + "/token")
+            .build();
 
         return webClient.get()
             .uri(uri)

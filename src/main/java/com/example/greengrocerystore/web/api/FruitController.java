@@ -4,6 +4,8 @@ import com.example.greengrocerystore.external.service.GetFruitNamesService;
 import com.example.greengrocerystore.external.service.GetFruitService;
 import com.example.greengrocerystore.web.api.response.FruitResponse;
 import com.example.greengrocerystore.web.api.response.GetFruitNamesResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,8 +27,21 @@ public class FruitController {
 
     @GetMapping("/api/v1/fruits")
     public Mono<FruitResponse> getFruit(
-        @RequestParam(required = false) String name) {
+        @RequestParam String name) {
         return getFruitService.get(name)
             .map(FruitResponse::new);
+    }
+
+    @GetMapping("/api/v2/fruits")
+    public Mono<List<FruitResponse>> getFruitV2(
+        @RequestParam(required = false) List<String> names) {
+        if (names == null) {
+            names = getFruitNamesService.get().block();
+        }
+
+        return getFruitService.get(names)
+            .map(getFruitDtos -> getFruitDtos.stream()
+                .map(FruitResponse::new)
+                .collect(Collectors.toList()));
     }
 }

@@ -1,26 +1,20 @@
 # 청과물 가게
 
-> 기능 별로 세부 내용은 `Issues` 를 참고해주세요!
+## 1. 환경
 
-### 1. 시작 페이지
+- springboot 2.5.2
+- thymeleaf
 
-![img.png](src/main/resources/static/img.png)
+## 2. 주요 구현 기능 & 기술
 
-### 2. 청과물 종류를 선택하고 청과물을 선택합니다.
+> 구현된 기능은 스텝별로 Issue 와 PR 을 기록했습니다.
 
-- 청과물 종류 선택에 따라 선택된 청과물의 이름이 있는 드랍다운 박스가 활성화 됩니다.
-- 선택된 청과물 종류는 readOnly 입니다.
-- 청과물 이름은 편의상 자동 입력되지만 수정 가능합니다.
+- webClient 를 활용한 외부 API 연동을 통한 조회
+- accessToken 관리와 자동 갱신
+- 표준 예외 처리
+- MDC 를 활용한 로깅
 
-![img_1.png](src/main/resources/static/img_1.png)
-
-### 3. 버튼을 클릭하면 청과물 이름과 가격이 조회됩니다.
-
-![img_2.png](src/main/resources/static/img_2.png)
-
----
-
-## 1. 실행 방법
+## 3. 실행 방법
 
 ```shell
 # 1. war 생성
@@ -37,8 +31,20 @@ greengrocery-store-0.0.1-SNAPSHOT.war
 # 3. http://localhost:8080/index 접속
 ```
 
-## 2. 환경
+## 4. 동작 예시
 
-- springboot 2.5.2
-- webClient
-- thymeleaf
+### 시작 페이지
+
+![img.png](src/main/resources/static/img.png)
+
+### 청과물 종류를 선택하고 청과물을 선택합니다.
+
+- 청과물 종류 선택에 따라 선택된 청과물의 이름이 있는 드랍다운 박스가 활성화 됩니다.
+- 선택된 청과물 종류는 readOnly 입니다.
+- 청과물 이름은 편의상 자동 입력되지만 수정 가능합니다.
+
+![img_1.png](src/main/resources/static/img_1.png)
+
+### 가격 조회 버튼을 클릭하면 청과물 이름과 가격이 조회됩니다.
+
+![img_2.png](src/main/resources/static/img_2.png)
