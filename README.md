@@ -1,21 +1,19 @@
 # 청과물 가게
 
-## 1. 환경
+## 1. 주요 구현 기능 & 기술
 
 ![total lines](https://img.shields.io/tokei/lines/github/Hyune-c/greengrocery-store)
 
 ![](https://img.shields.io/badge/spring%20boot-2.5.2-green) ![](https://img.shields.io/badge/java-8-green) ![](https://img.shields.io/badge/thymeleaf-%20-yellow) ![](https://img.shields.io/badge/webflux-%20-yellow)
 
-## 2. 주요 구현 기능 & 기술
-
 > 구현된 기능은 스텝별로 Issue 와 PR 을 기록했습니다.
 
 - webClient 를 활용한 외부 API 연동을 통한 조회
 - accessToken 관리와 자동 갱신
-- 표준 예외 처리
+- 표준 예외 처리 & CustomException 과 RestControllerAdvice 구현
 - MDC 를 활용한 로깅
 
-## 3. 실행 방법
+## 2. 실행 방법
 
 ```shell
 # 1. war 생성
@@ -32,7 +30,7 @@ greengrocery-store-0.0.1-SNAPSHOT.war
 # 3. http://localhost:8080/index 접속
 ```
 
-## 4. 동작 예시
+## 3. 동작 예시
 
 ### 시작 페이지
 
@@ -49,3 +47,7 @@ greengrocery-store-0.0.1-SNAPSHOT.war
 ### 가격 조회 버튼을 클릭하면 청과물 이름과 가격이 조회됩니다.
 
 ![img_2.png](src/main/resources/static/img_2.png)
+
+### 테스트 케이스
+
+![img.png](src/main/resources/static/img_4.png)
