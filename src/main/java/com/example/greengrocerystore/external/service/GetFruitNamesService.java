@@ -1,7 +1,6 @@
 package com.example.greengrocerystore.external.service;
 
-import com.example.greengrocerystore.common.exception.ErrorCode;
-import com.example.greengrocerystore.common.exception.custom.BusinessException;
+import com.example.greengrocerystore.common.exception.custom.CustomFruitExceptionHelper;
 import com.example.greengrocerystore.external.common.accesskey.FruitAccessToken;
 import com.google.gson.Gson;
 import java.net.URI;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
@@ -35,16 +33,7 @@ public class GetFruitNamesService {
             .header(HttpHeaders.AUTHORIZATION, fruitAccessToken.getAccessToken())
             .retrieve()
             .bodyToMono(String.class)
-            .doOnError(throwable -> {
-                if (throwable instanceof WebClientResponseException) {
-                    WebClientResponseException webClientResponseException = (WebClientResponseException) throwable;
-
-                    if (webClientResponseException.getResponseBodyAsString().contains("Access token required")) {
-                        fruitAccessToken.refresh();
-                        throw new BusinessException(ErrorCode.REFRESH_ACCESS_TOKEN);
-                    }
-                }
-            })
+            .doOnError(CustomFruitExceptionHelper::of)
             .map(names -> new Gson().fromJson(names, List.class));
     }
 }
