@@ -2,8 +2,9 @@
 
 ## 1. 환경
 
-- springboot 2.5.2
-- thymeleaf
+![total lines](https://img.shields.io/tokei/lines/github/Hyune-c/greengrocery-store)
+
+![](https://img.shields.io/badge/spring%20boot-2.5.2-green) ![](https://img.shields.io/badge/java-8-green) ![](https://img.shields.io/badge/thymeleaf-%20-yellow) ![](https://img.shields.io/badge/webflux-%20-yellow)
 
 ## 2. 주요 구현 기능 & 기술
 
