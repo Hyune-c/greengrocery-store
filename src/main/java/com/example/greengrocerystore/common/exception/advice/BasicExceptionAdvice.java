@@ -3,6 +3,8 @@ package com.example.greengrocerystore.common.exception.advice;
 import com.example.greengrocerystore.common.exception.ErrorCode;
 import com.example.greengrocerystore.common.exception.ErrorResponse;
 import com.example.greengrocerystore.common.exception.custom.BusinessException;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Order(Ordered.LOWEST_PRECEDENCE)
 @RestControllerAdvice
 public class BasicExceptionAdvice extends BaseExceptionAdvice {
 
@@ -32,10 +35,6 @@ public class BasicExceptionAdvice extends BaseExceptionAdvice {
         preHandle(ex);
         return ErrorResponse.of(ErrorCode.UNKNOWN);
     }
-
-
-    /* custom exception */
-
 
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {

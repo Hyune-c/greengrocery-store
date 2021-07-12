@@ -1,7 +1,6 @@
 package com.example.greengrocerystore.external.service;
 
-import com.example.greengrocerystore.common.exception.ErrorCode;
-import com.example.greengrocerystore.common.exception.custom.BusinessException;
+import com.example.greengrocerystore.common.exception.custom.CustomVegetableExceptionHelper;
 import com.example.greengrocerystore.external.common.accesskey.VegetableAccessToken;
 import com.google.gson.Gson;
 import java.net.URI;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import reactor.core.publisher.Mono;
 
@@ -35,16 +33,7 @@ public class GetVegetableNamesService {
             .header(HttpHeaders.AUTHORIZATION, vegetableAccessToken.getAccessToken())
             .retrieve()
             .bodyToMono(String.class)
-            .doOnError(throwable -> {
-                if (throwable instanceof WebClientResponseException) {
-                    WebClientResponseException webClientResponseException = (WebClientResponseException) throwable;
-
-                    if (webClientResponseException.getResponseBodyAsString().contains("Access token required")) {
-                        vegetableAccessToken.refresh();
-                        throw new BusinessException(ErrorCode.REFRESH_ACCESS_TOKEN);
-                    }
-                }
-            })
+            .doOnError(CustomVegetableExceptionHelper::of)
             .map(names -> new Gson().fromJson(names, List.class));
     }
 }
